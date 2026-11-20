@@ -3,10 +3,10 @@ const app = express();
 
 app.use(express.json());
 
-const VERSION = '1.0.0';
+const VERSION = '1.1.0';
 
 app.get('/', (req, res) => {
-  res.send('<h1>CI/CD Demo App</h1><p>Deployed automatically via GitHub Actions</p><p>Version: ' + VERSION + '</p>');
+  res.send('<h1>CI/CD Demo App</h1><p>Deployed automatically via GitHub Actions to Azure App Service</p><p>Version: ' + VERSION + '</p>');
 });
 
 app.get('/health', (req, res) => {
