@@ -7,6 +7,7 @@ on:
 
 env:
   IMAGE_NAME: cicd-webapp
+  APP_URL: https://hamza-cicd-webapp-gvdqe8c8ehbmduep.swedencentral-01.azurewebsites.net
 
 jobs:
   build-and-test:
@@ -60,3 +61,18 @@ jobs:
           tags: |
             ${{ env.IMAGE }}:latest
             ${{ env.IMAGE }}:${{ github.sha }}
+
+  deploy:
+    name: Deploy to Azure
+    needs: docker-publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Azure Web App to pull latest image
+        env:
+          WEBHOOK_URL: ${{ secrets.AZURE_WEBHOOK_URL }}
+        run: curl -fsS -X POST "$WEBHOOK_URL" -d ""
+
+      - name: Smoke test deployed app
+        run: |
+          sleep 60
+          curl -fsS --retry 10 --retry-delay 15 --retry-all-errors "$APP_URL/health"
